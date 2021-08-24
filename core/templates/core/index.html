@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+{% block title %}Add a student to all bootcamp courses{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-4">
+        <h3>Add new course</h3>
+        {% if messages %}
+        <ul class="text-danger">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <form action="{% url 'core:create_course' %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="mb-3">
+                    <label for="title" class="form-label fw-bold">Name:</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3">
+                    <label for="desc" class="form-label fw-bold">Description:</label>
+                    <textarea class="form-control" name="desc" id="desc" rows="3" placeholder="Description"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-end">
+                    <button type="submit" class="btn btn-success btn-sm">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row mt-5">
+    <h3>Courses</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered border-dark table-striped table-hover">
+            <thead>
+                <tr class="table-dark">
+                    <th>Course name</th>
+                    <th>Description</th>
+                    <th>Date added</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in courses %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.desc }}</td>
+                    <td>{{ i.created_at|date:"F d, Y" }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'core:destroy_course' i.id %}">remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
